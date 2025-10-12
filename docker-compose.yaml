@@ -9,61 +9,49 @@
 version: "3.8"
 
 services:
-
-  #Builds the frontend Docker image and creates the frontend microservice
-  brian-yolo-client:
-    image: brianbwire/brian-yolo-client:v1.0.0
-    build: ./client
-    container_name: brian-yolo-client
-    stdin_open: true
-    tty: true
+  # MongoDB Database
+  app-ip-mongo:
+    image: mongo:5.0
+    container_name: app-mongo
     ports:
-      - "3000:3000"
-    depends_on: 
-      - brian-yolo-backend
+      - "27017:27017"
+    volumes:
+      - app-mongo-data:/data/db
     networks:
       - app-net
 
-  #Builds the backend Docker image and creates the backend microservice
+  # Backend API
   brian-yolo-backend:
     image: brianbwire/brian-yolo-backend:v1.0.0
     build: ./backend
     container_name: brian-yolo-backend
-    stdin_open: true
-    tty: true
-    restart: always
+    restart: unless-stopped
     ports:
       - "5000:5000"
-    depends_on: 
+    depends_on:
       - app-ip-mongo
     networks:
       - app-net
 
-  #Creates the database microservice
-  app-ip-mongo:
-    image: mongo
-    container_name: app-mongo
+  # Frontend React App
+  brian-yolo-client:
+    image: brianbwire/brian-yolo-client:v1.0.0
+    build: ./client
+    container_name: brian-yolo-client
+    restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "3000:3000"
+    depends_on:
+      - brian-yolo-backend
     networks:
       - app-net
-    volumes:
-      - type: volume
-        source: app-mongo-data
-        target: /data/db
 
-#Creates the network infrastructure necessary for the containers to communicate with each other
+# Network for containers to communicate
 networks:
   app-net:
-    name: app-net
     driver: bridge
-    attachable: true
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16 
-          ip_range: 172.20.0.0/16 
 
-#Creates a Docker volume that persists all the data stored in the database
+# Volume for database persistence
 volumes:
   app-mongo-data:
     driver: local

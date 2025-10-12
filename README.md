@@ -1,6 +1,8 @@
 # Overview
 This project involved the containerization and deployment of a full-stack yolo application using Docker.
 
+**Author:** Jacob Taraya
+**Date:** October 2025
 
 # Requirements
 Install the docker engine here:
