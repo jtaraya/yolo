@@ -28,6 +28,9 @@ This is a containerized e-commerce application built with:
 - Docker Desktop installed
 - Docker Compose Installed
 - DockerHub account
+- Git
+- 4GB RAM minimum
+- 10GB free disk space
 
 ## Architecture
 This application uese a microservices architecture with  3 main services:
@@ -37,6 +40,11 @@ This application uese a microservices architecture with  3 main services:
 
 ##Quick Start
 ```bash
+
+### Clone the Repository
+```bash
+git clone https://github.com/jtaray/yolo.git
+cd yolo
 
 # Build & Start all services
 docker-compose up --build
