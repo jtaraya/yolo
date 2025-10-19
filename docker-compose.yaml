@@ -1,14 +1,19 @@
-# version: "1.0"
+version: "3.9" 
 
 services:
-# DATABASE Container
+  # DATABASE Container
   jtaraya-yolo-database:
-    image: mongo:3.0
+    build:
+      context: ./database          
+      dockerfile: Dockerfile      
+    image: jtaraya-yolo-database:v1.0.0
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     container_name: jtaraya-yolo-database
+    args:
+      - buildversion=1.0.0
     ports:
       - "27017:27017"
     volumes:
@@ -18,5 +23,4 @@ services:
 
 volumes:
   mongo-database:
-    name: mongo-database
     driver: local
