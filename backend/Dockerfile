@@ -21,11 +21,11 @@ RUN npm install --prod --omit=dev
 # Copy entire source code from the host to the working directory of container
 COPY . .
 
+RUN npm install mongoose@5.13.15
 # stage 2 - Running stage
 FROM alpine:3.16.7 AS prod
 # Working path for container
 WORKDIR /usr/src/app
-
 
 # not caching the package index to keep image size small
 RUN apk update && apk add --update nodejs && apk add --no-cache nodejs npm
