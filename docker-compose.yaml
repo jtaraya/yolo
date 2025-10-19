@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   # DATABASE Container
   jtaraya-yolo-database:
@@ -11,23 +13,20 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     container_name: jtaraya-yolo-database
-
     ports:
       - "27017:27017"
     volumes:
       - mongo-database:/data/db
     env_file:
       - .env
-
     networks:
       - backend-db-net
-
-
     healthcheck:
-        test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-        interval: 10s
-        retries: 5
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      retries: 5
 
   # BACKEND Container
   jtaraya-yolo-backend:
@@ -37,16 +36,12 @@ services:
       dockerfile: Dockerfile
       args:
         buildversion: v1.0.0
-
-    # interactive mode like docker run -it
     stdin_open: true
     tty: true
     restart: always
     container_name: jtaraya-yolo-backend
-
     env_file:
       - .env
-
     depends_on:
       - jtaraya-yolo-database
     ports:
@@ -54,9 +49,8 @@ services:
     networks:
       - backend-db-net
       - frontend-backend-net
-
-     volumes:
-        - backend-logs:/usr/src/app/logs
+    volumes:
+      - backend-logs:/usr/src/app/logs
 
   # FRONTEND Container
   jtaraya-yolo-client:
@@ -66,33 +60,30 @@ services:
       dockerfile: Dockerfile
       args:
         buildversion: v1.0.0
-
-    # interactive mode like docker run -it
     stdin_open: true
     tty: true
     restart: always
     container_name: jtaraya-yolo-client
     depends_on:
-        jtaraya-yolo-database:
-          condition: service_healthy
+      jtaraya-yolo-database:
+        condition: service_healthy
     ports:
       - "8080:80"
     networks:
       - frontend-backend-net
-
     volumes:
-        - client-logs:/usr/src/app/logs
+      - client-logs:/usr/src/app/logs
 
 volumes:
-    mongo-database:
-      driver: local
-    client-logs:
-      driver: local
-    backend-logs:
-      driver: local
+  mongo-database:
+    driver: local
+  client-logs:
+    driver: local
+  backend-logs:
+    driver: local
 
-  networks:
-    backend-db-net:
-      driver: bridge
-    frontend-backend-net:
-      driver: bridge
+networks:
+  backend-db-net:
+    driver: bridge
+  frontend-backend-net:
+    driver: bridge
