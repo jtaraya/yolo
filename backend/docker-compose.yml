@@ -1,0 +1,59 @@
+services:
+  # Database Service
+  yolo-database:
+    image: mongo:5.0
+    container_name: yolo-database
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    env_file:
+      - .env
+    networks:
+      - backend-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Service
+  yolo-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        buildversion: "1.0"
+    image: jtaraya/yolo-backend:v1.0
+    container_name: yolo-backend
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    ports:
+      - "5000:5000"
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      PORT: ${BACKEND_PORT}
+    env_file:
+      - .env
+    depends_on:
+      yolo-database:
+        condition: service_healthy
+    networks:
+      - backend-network
+      - frontend-network
+
+volumes:
+  mongodb-data:
+    driver: local
+
+networks:
+  backend-network:
+    driver: bridge
+  frontend-network:
+    driver: bridge
