@@ -2,13 +2,13 @@
 
 services:
 # DATABASE Container
-  jtaraya-database:
+  jtaraya-yolo-database:
     image: mongo:3.0
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-    container_name: jtaraya-database
+    container_name: jtaraya-yolo-database
     ports:
       - "27017:27017"
     volumes:
@@ -17,6 +17,6 @@ services:
       - .env
 
 volumes:
-
   mongo-database:
+    name: mongo-database
     driver: local
