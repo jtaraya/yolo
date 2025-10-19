@@ -1,0 +1,17 @@
+# version: "1.0"
+
+services:
+# DATABASE Container
+  jtaraya-database:
+    image: mongo:3.0
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    container_name: jtaraya-database
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-database:/data/db
+    env_file:
+      - .env
