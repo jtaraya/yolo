@@ -41,6 +41,7 @@ services:
       - "5000:5000"
     networks:
       - back-net
+      - jtaraya-net
 
   # FRONTEND Container
   jtaraya-yolo-client:
@@ -58,8 +59,8 @@ services:
     container_name: jtaraya-yolo-client
     ports:
       - "8080:80"
-    env_file:
-      - .env
+    networks:
+      - jtaraya-net
 
 
 volumes:
@@ -68,4 +69,6 @@ volumes:
 
 networks:
   back-net:
+    driver: bridge
+  jtaraya-net:
     driver: bridge
