@@ -21,7 +21,13 @@ services:
       - .env
 
     networks:
-      - back-net
+      - backend-db-net
+
+
+    healthcheck:
+        test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+        interval: 10s
+        retries: 5
 
   # BACKEND Container
   jtaraya-yolo-backend:
@@ -46,8 +52,11 @@ services:
     ports:
       - "5000:5000"
     networks:
-      - back-net
-      - jtaraya-net
+      - backend-db-net
+      - frontend-backend-net
+
+     volumes:
+        - backend-logs:/usr/src/app/logs
 
   # FRONTEND Container
   jtaraya-yolo-client:
@@ -63,18 +72,27 @@ services:
     tty: true
     restart: always
     container_name: jtaraya-yolo-client
+    depends_on:
+        jtaraya-yolo-database:
+          condition: service_healthy
     ports:
       - "8080:80"
     networks:
-      - jtaraya-net
+      - frontend-backend-net
 
+    volumes:
+        - client-logs:/usr/src/app/logs
 
 volumes:
-  mongo-database:
-    driver: local
+    mongo-database:
+      driver: local
+    client-logs:
+      driver: local
+    backend-logs:
+      driver: local
 
-networks:
-  back-net:
-    driver: bridge
-  jtaraya-net:
-    driver: bridge
+  networks:
+    backend-db-net:
+      driver: bridge
+    frontend-backend-net:
+      driver: bridge
