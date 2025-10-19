@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --omit=dev
+# Install dependencies (use legacy-peer-deps for old React)
+RUN npm install --legacy-peer-deps --production && npm cache clean --force
 
 # Copy application code
 COPY . .
