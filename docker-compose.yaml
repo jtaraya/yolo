@@ -1,23 +1,47 @@
-version: "3.9" 
+version: "3.9"
 
 services:
   # DATABASE Container
   jtaraya-yolo-database:
     build:
-      context: ./database          
-      dockerfile: Dockerfile      
+      context: ./database
+      dockerfile: Dockerfile
+      args:
+        buildversion: 1.0.0
     image: jtaraya-yolo-database:v1.0.0
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     container_name: jtaraya-yolo-database
-    args:
-      - buildversion=1.0.0
+
     ports:
       - "27017:27017"
     volumes:
       - mongo-database:/data/db
+    env_file:
+      - .env
+
+# BACKEND Container
+  jtaraya-yolo-backend:
+    image: jtaraya/jtaraya-yolo-backend:v1.0.0
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        buildversion: v1.0.0
+
+    # interactive mode like docker run -it
+    stdin_open: true
+    tty: true
+    restart: always
+    container_name: jtaraya-yolo-backend
+    ports:
+      - "5000:5000"
+    networks:
+      - back-net
+      - jtaraya-net
+
     env_file:
       - .env
 
