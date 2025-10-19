@@ -15,3 +15,8 @@ services:
       - mongo-database:/data/db
     env_file:
       - .env
+
+volumes:
+
+  mongo-database:
+    driver: local
