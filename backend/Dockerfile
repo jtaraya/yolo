@@ -1,57 +1,40 @@
-# Stage 1: Build Stage
-FROM node:18-alpine AS build
+FROM node:10-alpine AS build
 
-# Metadata
-LABEL author="[Jacob Taraya]"
-LABEL version="1.0"
+LABEL author="Jacob Taraya"
 
-# Build argument
-ARG buildversion=1.0
-
+ARG buildversion
 # Environment variables
-ENV PORT=5000
-ENV BUILD_VERSION=$buildversion
+ENV port=5000
+ENV build=$buildversion
 ENV NODE_ENV=production
 
-# Set working directory
-WORKDIR /app
+# Working path for the hosting app
+WORKDIR /usr/src/app
 
 # Copy dependency files
 COPY package*.json ./
 
-# Install production dependencies only
-RUN npm ci --omit=dev
+# Install prod dependencies only to reduce image size omitting dev dependencies
+RUN npm install --prod --omit=dev
+# RUN npm ci --omit=dev
 
-# Copy application source
+# Copy entire source code from the host to the working directory of container
 COPY . .
 
-# Stage 2: Production Stage  
-FROM node:18-alpine AS production
+RUN npm install mongoose@5.13.15
+# stage 2 - Running stage
+FROM alpine:3.16.7 AS prod
+# Working path for container
+WORKDIR /usr/src/app
 
-# Set working directory
-WORKDIR /app
+# not caching the package index to keep image size small
+RUN apk update && apk add --update nodejs && apk add --no-cache nodejs npm
 
-# Copy package files
-COPY package*.json ./
+# copy files from build stage to working dir of container
+COPY --from=build /usr/src/app ./
 
-# Copy node_modules from build stage
-COPY --from=build /app/node_modules ./node_modules
+EXPOSE $port
 
-# Copy application code
-COPY . .
-
-# Fix ownership for security
-RUN chown -R node:node /app
-
-# Switch to non-root user
-USER node
-
-# Expose port
-EXPOSE 5000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:5000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
-
-# Start application
+RUN echo "Build version: $build"
+# Start the server
 CMD ["node", "server.js"]

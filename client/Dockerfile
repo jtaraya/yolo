@@ -1,48 +1,41 @@
-# Stage 1: Build Stage
-FROM node:18-alpine AS build
+# === Build stage ===
+FROM node:14-slim AS build
 
-# Metadata
-LABEL author="[Jacob Taraya]"
-LABEL version="1.0"
+LABEL author="Jacob Taraya"
 
-# Build argument
-ARG buildversion=1.0
+ARG buildversion
+# Evironment variables
 
-# Environment variables
-ENV PORT=3000
-ENV BUILD_VERSION=$buildversion
+ENV port=80
+ENV build=$buildversion
 ENV NODE_ENV=production
+WORKDIR /usr/src/app
 
-# Set working directory
-WORKDIR /app
-
-# Copy dependency files
 COPY package*.json ./
 
-# Install all dependencies (including devDependencies for build)
-RUN npm install --legacy-peer-deps
+RUN npm install --prod --omit=dev 
+# RUN npm ci --omit=dev
 
-# Copy source code
 COPY . .
 
-# Build the React app
+# Build 
 RUN npm run build
 
-# Stage 2: Production Stage with Nginx
-FROM nginx:alpine AS production
+# === Runtime stage ===
+FROM nginx:alpine
 
-# Remove default nginx config
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy built files from build stage
-COPY --from=build /app/build /usr/share/nginx/html
+WORKDIR /usr/src/app
 
-# Expose port
-EXPOSE 80
+# reduce image size by copying only necessary files
+# COPY --from=build /usr/src/app/package*.json ./
+# COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:80 || exit 1
+EXPOSE $port
 
-# Start nginx
+RUN echo "Build version: $build"
+
+# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
