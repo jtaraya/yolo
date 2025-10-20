@@ -852,3 +852,44 @@ MongoCompatibilityError: Server at pmc-yolo-database:27017 reports maximum wire 
 Author: [Jacob Taraya](https://github.com/jtaraya)
 
 The original project was forked from [yolo](https://github.com/Vinge1718/yolo).
+
+╔══════════════════════════════════════════════════════════════╗
+║        YOLO E-COMMERCE IP2 - FINAL SUBMISSION SUMMARY        ║
+╚══════════════════════════════════════════════════════════════╝
+
+STUDENT: Jacob Taraya
+COURSE: DevOps Week 4 - IP2
+DATE: October 2025
+
+┌──────────────────────────────────────────────────────────────┐
+│ SUBMISSION LINKS                                             │
+└──────────────────────────────────────────────────────────────┘
+GitHub: https://github.com/jtaraya/yolo
+DockerHub Backend: https://hub.docker.com/r/jtaraya/jtaraya-yolo-backend
+DockerHub Frontend: https://hub.docker.com/r/jtaraya/jtaraya-yolo-client
+
+┌──────────────────────────────────────────────────────────────┐
+│ IMAGE SIZES (EXCELLENT!)                                     │
+└──────────────────────────────────────────────────────────────┘
+Backend:  86.9MB  ✅
+Frontend: 54.8MB  ✅
+Total:    141.7MB ✅ (64% below 400MB requirement!)
+
+┌──────────────────────────────────────────────────────────────┐
+│ KEY ACHIEVEMENTS                                             │
+└──────────────────────────────────────────────────────────────┘
+- Multi-stage builds for both services
+- Alpine-based images for minimal size
+- 66% size reduction from baseline
+- Deployed to DockerHub
+- Custom bridge networks
+- Named volumes for persistence
+- Professional documentation
+
+┌──────────────────────────────────────────────────────────────┐
+│ QUICK TEST                                                   │
+└──────────────────────────────────────────────────────────────┘
+docker pull jtaraya/jtaraya-yolo-backend:v1.0
+docker pull jtaraya/jtaraya-yolo-client:v1.0
+cd yolo && docker-compose up -d
+Open: http://localhost:3000
