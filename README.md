@@ -40,6 +40,23 @@ Full-stack e-commerce platform built with MERN stack, demonstrating containerize
    - **Image:** mongo:5.0 (official)
    - **Size:** ~693MB
    - **Port:** 27017
+## Containers running
+   ![alt text](<Screenshot from 2025-10-20 15-49-22.png>)
+
+
+
+### Image Size - Requirement: Below 400MB
+## Total Custom Images: 141.7MB
+![alt text](<Screenshot from 2025-10-20 15-20-55.png>)
+
+
+Frontend site http://localhost:3000/
+
+###  Product Upload 
+![alt text](<Screenshot from 2025-10-20 15-25-23.png>)
+
+## Then Add Product 
+![alt text](<Screenshot from 2025-10-20 15-30-12.png>)
 
 ### Networks
 
