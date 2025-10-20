@@ -59,6 +59,28 @@ Frontend site http://localhost:3000/
 ## Then Add Product 
 ![alt text](<Screenshot from 2025-10-20 15-30-12.png>)
 
+
+## DockerHub Images
+
+Pre-built images are available on DockerHub:
+
+### Backend
+```bash
+docker pull jtaraya/jtaraya-yolo-backend:v1.0
+```
+- **Image:** [jtaraya/jtaraya-yolo-backend](https://hub.docker.com/r/jtaraya/jtaraya-yolo-backend)
+- **Size:** 86.9MB
+- **Tag:** v1.0
+
+### Frontend
+```bash
+docker pull jtaraya/jtaraya-yolo-client:v1.0
+```
+- **Image:** [jtaraya/jtaraya-yolo-client](https://hub.docker.com/r/jtaraya/jtaraya-yolo-client)
+- **Size:** 54.8MB
+- **Tag:** v1.0
+
+
 ### Networks
 
 - **backend-network:** Database ↔ Backend communication
