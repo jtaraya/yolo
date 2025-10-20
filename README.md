@@ -51,7 +51,8 @@ Full-stack e-commerce platform built with MERN stack, demonstrating containerize
 ![alt text](<Screenshot from 2025-10-20 15-20-55.png>)
 
 
-Frontend site http://localhost:3000/
+## Frontend site http://localhost:3000/
+![alt text](<Screenshot from 2025-10-20 17-34-30.png>)
 
 ###  Product Upload 
 ![alt text](<Screenshot from 2025-10-20 15-25-23.png>)
@@ -82,11 +83,13 @@ docker pull jtaraya/jtaraya-yolo-client:v1.0
 
 
 ### Networks
+![alt text](<Screenshot from 2025-10-20 17-32-51.png>)
 
 - **backend-network:** Database ↔ Backend communication
 - **frontend-network:** Backend ↔ Frontend communication
 
 ### Volumes
+![alt text](<Screenshot from 2025-10-20 17-33-40.png>)
 
 - **mongodb-data:** Persistent database storage
 
@@ -135,6 +138,7 @@ yolo/
 ├── .gitignore
 └── README.md
 ```
+
 
 
 
