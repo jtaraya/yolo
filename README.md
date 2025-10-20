@@ -113,14 +113,6 @@ docker-compose up --build -d
 # Backend: http://localhost:5000
 ```
 
-## Image Sizes (Optimized!)
-
-| Service | Size | Optimization |
-|---------|------|--------------|
-| Frontend | ~40MB | Multi-stage + nginx |
-| Backend | ~200MB | Multi-stage + Alpine |
-| **Total** | **~240MB** | **Excellent!** |
-
 ## Data Persistence Test
 ```bash
 # Add products at http://localhost:3000
@@ -128,23 +120,6 @@ docker-compose down
 docker-compose up -d
 # Products should still exist ✅
 ```
-
-## DockerHub Images
-
-- **Backend:** https://hub.docker.com/r/jtaraya/yolo-backend
-- **Frontend:** https://hub.docker.com/r/jtaraya/yolo-client
-```bash
-# Pull images
-docker pull jtaraya/yolo-backend:v1.0
-docker pull jtaraya/yolo-client:v1.0
-```
-
-
-✅ **Git Workflow (3/3)** - Multiple descriptive commits
-✅ **Image Selection (3/3)** - Alpine images, total < 300MB
-✅ **Image Versioning (2/2)** - v1.0 format (not semver)
-✅ **Image Deployment (1/1)** - Pushed to DockerHub
-✅ **Service Orchestration (6/6)** - All services + network + volume + persistence
 
 ## Project Structure
 ```
