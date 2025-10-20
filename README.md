@@ -25,20 +25,20 @@ Full-stack e-commerce platform built with MERN stack, demonstrating containerize
    - **Technology:** React + Nginx
    - **Image:** jtaraya/yolo-client:v1.0
    - **Base:** node:16-alpine (build), nginx:alpine (production)
-   - **Size:** ~40MB
-   - **Port:** 3000 → 80
+   - **Size:** ~54.8MB
+   - **Port:** 3000
 
 2. **Backend (API)**
    - **Technology:** Node.js/Express
    - **Image:** jtaraya/yolo-backend:v1.0
    - **Base:** node:16-alpine
-   - **Size:** ~200MB
+   - **Size:** ~86.9MB
    - **Port:** 5000
 
 3. **Database**
    - **Technology:** MongoDB 5.0
    - **Image:** mongo:5.0 (official)
-   - **Size:** ~693MB
+   - **Size:** ~232MB
    - **Port:** 27017
 ## Containers running and built
    ![alt text](<Screenshot from 2025-10-20 15-49-22.png>)
