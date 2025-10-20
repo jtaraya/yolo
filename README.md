@@ -40,8 +40,9 @@ Full-stack e-commerce platform built with MERN stack, demonstrating containerize
    - **Image:** mongo:5.0 (official)
    - **Size:** ~693MB
    - **Port:** 27017
-## Containers running
+## Containers running and built
    ![alt text](<Screenshot from 2025-10-20 15-49-22.png>)
+   ![alt text](<Screenshot from 2025-10-20 15-54-47.png>)
 
 
 
