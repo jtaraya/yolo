@@ -1,5 +1,12 @@
+# MongoDB base image
 FROM mongo:3.0
+LABEL author="Jacob Taraya"
+ARG buildversion
+ENV port=27017
+ENV build=$buildversion
+ENV NODE_ENV=production
 
-EXPOSE 27017
+EXPOSE ${port}
 
+RUN echo "Build version: ${build}"
 CMD ["mongod"]
