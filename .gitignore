@@ -1,49 +1,52 @@
-# Vagrant
+# Vagrant files
 .vagrant/
 *.box
 
-# VirtualBox
+# VirtualBox files
 *.vdi
 *.vmdk
 *.vbox
 
-# Ansible
+# Ansible files
 *.retry
 .ansible/
 ansible.log
 ansible-venv/
 
-# Python
+# Python files
 __pycache__/
 *.py[cod]
 .Python
 venv/
 env/
 
-# Logs
+# Log files
 *.log
 
-# OS
+# Operating system files
 .DS_Store
 Thumbs.db
 *~
 *.swp
+*.swo
 
-# IDEs
+# IDE files
 .vscode/
 .idea/
+*.sublime-*
 
 # SSH keys
 *.pem
 *.key
+id_rsa*
 
-# Environment
+# Environment files
 .env
 .env.local
 
 # Node modules
 node_modules/
 
-# Application data
+# Application data (created in VM)
 /opt/yolo-ecommerce/
 /var/lib/mongodb/
