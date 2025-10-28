@@ -1,0 +1,37 @@
+---
+# Application Configuration
+app_name: "yolo-ecommerce"
+app_user: "vagrant"
+app_directory: "/opt/yolo"
+
+# GitHub Repository
+github_repo: "https://github.com/jtaraya/yolo.git"
+github_branch: "master"
+
+# Docker Configuration
+docker_users:
+  - "{{ app_user }}"
+
+# MongoDB Configuration
+mongodb_container_name: "mongodb"
+mongodb_image: "mongo:5.0"
+mongodb_port: 27017
+mongodb_data_dir: "/opt/mongodb/data"
+mongodb_database: "yolomy"
+
+# Backend Configuration
+backend_container_name: "backend"
+backend_image: "yolo-backend:latest"
+backend_port: 5000
+backend_dockerfile: "{{ app_directory }}/backend/Dockerfile"
+mongodb_connection_string: "mongodb://{{ mongodb_container_name }}:{{ mongodb_port }}/{{ mongodb_database }}"
+
+# Frontend Configuration
+frontend_container_name: "frontend"
+frontend_image: "yolo-frontend:latest"
+frontend_port: 3000
+frontend_dockerfile: "{{ app_directory }}/client/Dockerfile"
+backend_api_url: "http://{{ backend_container_name }}:{{ backend_port }}"
+
+# Docker Network
+docker_network_name: "yolo-network"
