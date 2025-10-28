@@ -6,7 +6,7 @@ app_directory: "/opt/yolo"
 
 # GitHub Repository
 github_repo: "https://github.com/jtaraya/yolo.git"
-github_branch: "master"
+github_branch: "ip2-docker-compose"
 
 # Docker Configuration
 docker_users:
