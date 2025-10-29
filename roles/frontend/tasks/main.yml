@@ -1,0 +1,44 @@
+- name: Frontend Deployment Block
+  block:
+    - name: Build frontend image
+      community.docker.docker_image:
+        name: "{{ frontend_image }}"
+        build:
+          path: "{{ app_directory }}/client"
+          pull: yes
+        source: build
+        force_source: yes
+
+    - name: Stop existing container
+      community.docker.docker_container:
+        name: "{{ frontend_container_name }}"
+        state: absent
+      ignore_errors: yes
+
+    - name: Deploy frontend container
+      community.docker.docker_container:
+        name: "{{ frontend_container_name }}"
+        image: "{{ frontend_image }}"
+        state: started
+        restart_policy: always
+        networks:
+          - name: "{{ docker_network_name }}"
+        ports:
+          - "{{ frontend_port }}:3000"
+        env:
+          REACT_APP_API_URL: "http://localhost:{{ backend_port }}"
+        links:
+          - "{{ backend_container_name }}:backend"
+
+    - name: Wait for frontend
+      wait_for:
+        host: localhost
+        port: "{{ frontend_port }}"
+        delay: 10
+        timeout: 120
+
+  rescue:
+    - debug:
+        msg: "Frontend deployment failed"
+    - fail:
+        msg: "Frontend deployment failed"
