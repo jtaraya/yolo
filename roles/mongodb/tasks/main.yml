@@ -1,0 +1,46 @@
+- name: MongoDB Deployment Block
+  block:
+    - name: Create MongoDB data directory
+      file:
+        path: "{{ mongodb_data_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+
+    - name: Pull MongoDB image
+      community.docker.docker_image:
+        name: "{{ mongodb_image }}"
+        source: pull
+
+    - name: Stop existing container
+      community.docker.docker_container:
+        name: "{{ mongodb_container_name }}"
+        state: absent
+      ignore_errors: yes
+
+    - name: Deploy MongoDB container
+      community.docker.docker_container:
+        name: "{{ mongodb_container_name }}"
+        image: "{{ mongodb_image }}"
+        state: started
+        restart_policy: always
+        networks:
+          - name: "{{ docker_network_name }}"
+        ports:
+          - "{{ mongodb_port }}:27017"
+        volumes:
+          - "{{ mongodb_data_dir }}:/data/db"
+        env:
+          MONGO_INITDB_DATABASE: "{{ mongodb_database }}"
+
+    - name: Wait for MongoDB
+      wait_for:
+        host: localhost
+        port: "{{ mongodb_port }}"
+        delay: 5
+        timeout: 60
+
+  rescue:
+    - debug:
+        msg: "MongoDB deployment failed"
+    - fail:
+        msg: "MongoDB deployment failed"
