@@ -1,0 +1,47 @@
+- name: Deploy YOLO E-Commerce Application
+  hosts: yolo_servers
+  become: yes
+  gather_facts: yes
+  
+  vars_files:
+    - group_vars/all.yml
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+  roles:
+    - role: docker
+      tags: [docker, setup]
+    
+    - role: app_setup
+      tags: [app_setup, setup]
+    
+    - role: mongodb
+      tags: [mongodb, database]
+    
+    - role: backend
+      tags: [backend, api]
+    
+    - role: frontend
+      tags: [frontend, web]
+
+  post_tasks:
+    - name: Display deployment completion
+      debug:
+        msg:
+          - "✅ DEPLOYMENT COMPLETED!"
+          - "Frontend: http://localhost:3000"
+          - "Backend: http://localhost:5000"
+          - "MongoDB: mongodb://localhost:27017"
+
+    - name: Show container status
+      command: docker ps
+      register: containers
+      changed_when: false
+
+    - name: Display containers
+      debug:
+        var: containers.stdout_lines
