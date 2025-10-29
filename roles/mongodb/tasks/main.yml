@@ -5,17 +5,26 @@
         path: "{{ mongodb_data_dir }}"
         state: directory
         owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0755'
+      tags:
+        - mongodb_directory
 
-    - name: Pull MongoDB image
+    - name: Pull MongoDB Docker image
       community.docker.docker_image:
         name: "{{ mongodb_image }}"
         source: pull
+        state: present
+      tags:
+        - mongodb_image
 
-    - name: Stop existing container
+    - name: Stop existing MongoDB container if running
       community.docker.docker_container:
         name: "{{ mongodb_container_name }}"
         state: absent
-      ignore_errors: yes
+      ignore_errors: true
+      tags:
+        - mongodb_cleanup
 
     - name: Deploy MongoDB container
       community.docker.docker_container:
@@ -31,16 +40,56 @@
           - "{{ mongodb_data_dir }}:/data/db"
         env:
           MONGO_INITDB_DATABASE: "{{ mongodb_database }}"
+        healthcheck:
+          test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+          interval: 10s
+          timeout: 5s
+          retries: 5
+          start_period: 40s
+      tags:
+        - mongodb_container
 
-    - name: Wait for MongoDB
+    - name: Wait for MongoDB to be ready
       wait_for:
         host: localhost
         port: "{{ mongodb_port }}"
         delay: 5
         timeout: 60
+        state: started
+      tags:
+        - mongodb_wait
+
+    - name: Verify MongoDB is running
+      community.docker.docker_container_info:
+        name: "{{ mongodb_container_name }}"
+      register: mongodb_info
+      tags:
+        - mongodb_verify
+
+    - name: Display MongoDB status
+      debug:
+        msg:
+          - "MongoDB container status: {{ mongodb_info.container.State.Status }}"
+          - "MongoDB is accessible at: mongodb://localhost:{{ mongodb_port }}/{{ mongodb_database }}"
+      when: mongodb_info.exists
+      tags:
+        - mongodb_verify
 
   rescue:
-    - debug:
-        msg: "MongoDB deployment failed"
-    - fail:
+    - name: Display error message
+      debug:
+        msg: "Failed to deploy MongoDB container. Check Docker installation and network settings."
+    
+    - name: Show MongoDB container logs
+      command: docker logs {{ mongodb_container_name }}
+      register: mongodb_logs
+      ignore_errors: true
+    
+    - name: Display MongoDB logs
+      debug:
+        var: mongodb_logs.stdout_lines
+      when: mongodb_logs is defined
+    
+    - name: Fail the playbook
+      fail:
         msg: "MongoDB deployment failed"
