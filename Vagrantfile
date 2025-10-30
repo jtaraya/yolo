@@ -18,13 +18,19 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
   
-  # SKIP shell provisioning - Ansible comes pre-installed on the box!
-  # Just use ansible_local to run the playbook
+  # Install Ansible using Python (comes pre-installed)
+  config.vm.provision "shell", inline: <<-SHELL
+    # Python3 is already installed, just install pip via Python
+    python3 -m pip install --user ansible 2>/dev/null || true
+    # Make sure ansible is in PATH
+    export PATH="~/.local/bin:$PATH"
+  SHELL
+  
+  # Then run playbook
   config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "ansible/playbook.yml"
     ansible.inventory_path = "ansible/inventory"
     ansible.verbose = true
-    # Don't try to install ansible - it's already on the box!
     ansible.install = false
   end
 end
