@@ -1,47 +1,45 @@
-- name: Deploy YOLO E-Commerce Application
-  hosts: yolo_servers
-  become: yes
+- name: "Deploy YOLO E-Commerce Application"
+  hosts: all
   gather_facts: yes
   
   vars_files:
     - group_vars/all.yml
-
-  pre_tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-        cache_valid_time: 3600
+  
+  tasks:
+    - name: "Pre-flight checks"
+      block:
+        - name: "Display system information"
+          debug:
+            msg: |
+              System: {{ ansible_system }}
+              Distribution: {{ ansible_distribution }}
+              Kernel: {{ ansible_kernel }}
+      tags:
+        - preflight
+        - always
 
   roles:
-    - role: docker
+    - role: docker_install
       tags: [docker, setup]
-    
-    - role: app_setup
-      tags: [app_setup, setup]
-    
+    - role: database
+      tags: [database, services]
     - role: mongodb
-      tags: [mongodb, database]
-    
+      tags: [mongodb, services]
     - role: backend
-      tags: [backend, api]
-    
+      tags: [backend, services]
     - role: frontend
-      tags: [frontend, web]
-
+      tags: [frontend, services]
+  
   post_tasks:
-    - name: Display deployment completion
-      debug:
-        msg:
-          - "✅ DEPLOYMENT COMPLETED!"
-          - "Frontend: http://localhost:3000"
-          - "Backend: http://localhost:5000"
-          - "MongoDB: mongodb://localhost:27017"
-
-    - name: Show container status
-      command: docker ps
-      register: containers
-      changed_when: false
-
-    - name: Display containers
-      debug:
-        var: containers.stdout_lines
+    - name: "Post-deployment verification"
+      block:
+        - name: "List all running containers"
+          command: docker ps
+          register: running_containers
+          changed_when: false
+          
+        - name: "Display running containers"
+          debug:
+            var: running_containers.stdout_lines
+      tags:
+        - always

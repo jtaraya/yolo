@@ -1,5 +1,5 @@
-[yolo_servers]
-yolo-ecommerce ansible_host=192.168.56.10 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/virtualbox/private_key
+[all]
+localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 
-[yolo_servers:vars]
-ansible_python_interpreter=/usr/bin/python3
+[all:vars]
+ansible_connection=local
