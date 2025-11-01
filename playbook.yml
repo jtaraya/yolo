@@ -1,45 +1,16 @@
-- name: "Deploy YOLO E-Commerce Application"
-  hosts: all
-  gather_facts: yes
-  
+---
+- name: Configure YOLO app VM
+  hosts: default
+  become: true
   vars_files:
-    - group_vars/all.yml
-  
-  tasks:
-    - name: "Pre-flight checks"
-      block:
-        - name: "Display system information"
-          debug:
-            msg: |
-              System: {{ ansible_system }}
-              Distribution: {{ ansible_distribution }}
-              Kernel: {{ ansible_kernel }}
-      tags:
-        - preflight
-        - always
+    - vars/all.yml
 
   roles:
-    - role: docker_install
-      tags: [docker, setup]
-    - role: database
-      tags: [database, services]
-    - role: mongodb
-      tags: [mongodb, services]
+    - role: common
+      tags: [common]
+    - role: db
+      tags: [db]
     - role: backend
-      tags: [backend, services]
+      tags: [backend]
     - role: frontend
-      tags: [frontend, services]
-  
-  post_tasks:
-    - name: "Post-deployment verification"
-      block:
-        - name: "List all running containers"
-          command: docker ps
-          register: running_containers
-          changed_when: false
-          
-        - name: "Display running containers"
-          debug:
-            var: running_containers.stdout_lines
-      tags:
-        - always
+      tags: [frontend]
