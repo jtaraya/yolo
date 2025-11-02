@@ -75,6 +75,21 @@ You should see 3 containers running.
 
 ## Testing
 
+## Test Each Role
+
+# Start VM
+vagrant up --no-provision
+
+# Test common role only
+ansible-playbook playbook.yml --tags common -i inventory.yml
+
+# Verify
+vagrant ssh -c "docker --version"
+vagrant ssh -c "docker network ls | grep -E 'backend-db-net|frontend-backend-net'"
+vagrant ssh -c "ls -la /opt/yolo/"
+![alt text](<test: Common role verified - Docker installed and networks.png>)
+
+
 ### Test Frontend
 ```bash
 curl http://localhost:8080
