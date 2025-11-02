@@ -1,9 +1,10 @@
 # General settings
-repo_url: https://github.com/Vinge1718/yolo.git
+repo_url: https://github.com/Vinge1718/yolo.git 
 app_base_dir: /opt/yolo
 
 # Frontend configuration
-frontend_image: yolo-frontend:latest
+frontend_dir: "{{ app_base_dir }}/frontend"
+frontend_image: jtaraya/yolo-client:v1.0.0
 frontend_container_name: yolo-frontend
 frontend_network: frontend-backend-net
 frontend_port: 80
@@ -11,7 +12,8 @@ frontend_env:
   NODE_ENV: production
 
 # Backend configuration
-backend_image: yolo-backend:latest
+backend_dir: "{{ app_base_dir }}/backend"
+backend_image: jtaraya/yolo-backend:v1.0.0
 backend_container_name: yolo-backend
 backend_networks:
   - backend-db-net
@@ -22,8 +24,9 @@ backend_env:
   MONGODB_URI: "mongodb://root:jtaraya123@yolo-database:27017"
   NODE_ENV: production
 
-# Database configuration (uses official MongoDB image)
-db_image: mongo:latest
+# Database configuration
+db_dir: "{{ app_base_dir }}/db"
+db_image: jtaraya123/yolo-database:v1.0.0
 db_container_name: yolo-database
 db_network: backend-db-net
 db_port: 27017
