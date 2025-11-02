@@ -1,0 +1,30 @@
+---
+- name: Build MongoDB database image
+  docker_image:
+    name: "{{ db_image }}"
+    build:
+      path: "{{ app_base_dir }}/src/database"
+      dockerfile: Dockerfile
+    source: build
+    state: present
+  become: yes
+
+- name: Build backend API image
+  docker_image:
+    name: "{{ backend_image }}"
+    build:
+      path: "{{ app_base_dir }}/src/backend"
+      dockerfile: Dockerfile
+    source: build
+    state: present
+  become: yes
+
+- name: Build frontend client image
+  docker_image:
+    name: "{{ frontend_image }}"
+    build:
+      path: "{{ app_base_dir }}/src/client"
+      dockerfile: Dockerfile
+    source: build
+    state: present
+  become: yes

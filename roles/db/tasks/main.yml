@@ -3,13 +3,15 @@
   file:
     path: "{{ db_dir }}"
     state: directory
-    owner: vagrant
-    group: vagrant
 
-- name: Pull MongoDB image from Docker Hub
+- name: Build MongoDB database image
   docker_image:
     name: "{{ db_image }}"
-    source: pull
+    build:
+      path: "{{ app_base_dir }}/src/database"
+      dockerfile: Dockerfile
+    source: build
+    state: present
   become: yes
 
 - name: Create MongoDB data volume
