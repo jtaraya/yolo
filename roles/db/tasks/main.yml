@@ -1,95 +1,33 @@
-- name: MongoDB Deployment Block
-  block:
-    - name: Create MongoDB data directory
-      file:
-        path: "{{ mongodb_data_dir }}"
-        state: directory
-        owner: "{{ app_user }}"
-        group: "{{ app_user }}"
-        mode: '0755'
-      tags:
-        - mongodb_directory
+---
+- name: Ensure database directory exists
+  file:
+    path: "{{ db_dir }}"
+    state: directory
+    owner: vagrant
+    group: vagrant
 
-    - name: Pull MongoDB Docker image
-      community.docker.docker_image:
-        name: "{{ mongodb_image }}"
-        source: pull
-        state: present
-      tags:
-        - mongodb_image
+- name: Pull MongoDB image from Docker Hub
+  docker_image:
+    name: "{{ db_image }}"
+    source: pull
+  become: yes
 
-    - name: Stop existing MongoDB container if running
-      community.docker.docker_container:
-        name: "{{ mongodb_container_name }}"
-        state: absent
-      ignore_errors: true
-      tags:
-        - mongodb_cleanup
+- name: Create MongoDB data volume
+  docker_volume:
+    name: "{{ db_volume }}"
+    state: present
+  become: yes
 
-    - name: Deploy MongoDB container
-      community.docker.docker_container:
-        name: "{{ mongodb_container_name }}"
-        image: "{{ mongodb_image }}"
-        state: started
-        restart_policy: always
-        networks:
-          - name: "{{ docker_network_name }}"
-        ports:
-          - "{{ mongodb_port }}:27017"
-        volumes:
-          - "{{ mongodb_data_dir }}:/data/db"
-        env:
-          MONGO_INITDB_DATABASE: "{{ mongodb_database }}"
-        healthcheck:
-          test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-          interval: 10s
-          timeout: 5s
-          retries: 5
-          start_period: 40s
-      tags:
-        - mongodb_container
-
-    - name: Wait for MongoDB to be ready
-      wait_for:
-        host: localhost
-        port: "{{ mongodb_port }}"
-        delay: 5
-        timeout: 60
-        state: started
-      tags:
-        - mongodb_wait
-
-    - name: Verify MongoDB is running
-      community.docker.docker_container_info:
-        name: "{{ mongodb_container_name }}"
-      register: mongodb_info
-      tags:
-        - mongodb_verify
-
-    - name: Display MongoDB status
-      debug:
-        msg:
-          - "MongoDB container status: {{ mongodb_info.container.State.Status }}"
-          - "MongoDB is accessible at: mongodb://localhost:{{ mongodb_port }}/{{ mongodb_database }}"
-      when: mongodb_info.exists
-      tags:
-        - mongodb_verify
-
-  rescue:
-    - name: Display error message
-      debug:
-        msg: "Failed to deploy MongoDB container. Check Docker installation and network settings."
-    
-    - name: Show MongoDB container logs
-      command: docker logs {{ mongodb_container_name }}
-      register: mongodb_logs
-      ignore_errors: true
-    
-    - name: Display MongoDB logs
-      debug:
-        var: mongodb_logs.stdout_lines
-      when: mongodb_logs is defined
-    
-    - name: Fail the playbook
-      fail:
-        msg: "MongoDB deployment failed"
+- name: Run MongoDB container
+  docker_container:
+    name: "{{ db_container_name }}"
+    image: "{{ db_image }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ db_network }}"
+    env: "{{ db_env }}"
+    ports:
+      - "{{ db_port }}:{{ db_port }}"
+    volumes:
+      - "{{ db_volume }}:/data/db"
+  become: yes
