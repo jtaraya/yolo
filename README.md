@@ -147,3 +147,13 @@ yolo/
 [Jacob Taraya]  
 GitHub: [https://github.com/jtaraya/yolo.git]  
 DockerHub: [https://app.docker.com/accounts/jtaraya]
+
+---
+
+## Branch Information
+
+- **master**: Contains IP4 Orchestration implementation (Kubernetes deployment)
+- **ip2-docker-compose**: Docker Compose implementation
+- **ip3-configuration-management**: Configuration Management with Ansible
+- **ip4-orchestration**: Kubernetes orchestration (same as master)
+
