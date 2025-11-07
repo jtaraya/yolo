@@ -23,7 +23,7 @@ spec:
         - containerPort: 5000
           name: http
         env:
-        - name: MONGODB_URI
+        - name: MONGO_URI
           value: "mongodb://admin:password@mongodb-service:27017/yolomy?authSource=admin"
         - name: PORT
           value: "5000"
