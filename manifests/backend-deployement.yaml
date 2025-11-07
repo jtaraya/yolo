@@ -1,30 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment
+  name: backend-deployment
   labels:
-    app: frontend
-    tier: ui
+    app: backend
+    tier: api
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: frontend
+      app: backend
   template:
     metadata:
       labels:
-        app: frontend
-        tier: ui
+        app: backend
+        tier: api
     spec:
       containers:
-      - name: frontend
-        image: jtaraya/yolo-frontend:v1.0.0
+      - name: backend
+        image: jtaraya/yolo-backend:v1.0.0
         ports:
-        - containerPort: 3000
+        - containerPort: 5000
           name: http
         env:
-        - name: REACT_APP_BACKEND_URL
-          value: "http://backend-service:5000"
+        - name: MONGODB_URI
+          value: "mongodb://admin:password@mongodb-service:27017/yolomy?authSource=admin"
+        - name: PORT
+          value: "5000"
         resources:
           requests:
             memory: "128Mi"
@@ -35,30 +37,28 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 3000
+            port: 5000
           initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /
-            port: 3000
+            port: 5000
           initialDelaySeconds: 10
           periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: backend-service
   labels:
-    app: frontend
-  annotations:
-    cloud.google.com/neg: '{"ingress": true}'
+    app: backend
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
-    app: frontend
+    app: backend
   ports:
-  - port: 80
-    targetPort: 3000
+  - port: 5000
+    targetPort: 5000
     protocol: TCP
     name: http
