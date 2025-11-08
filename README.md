@@ -1,5 +1,3 @@
-# YOLO Orchestration
-
 # YOLO E-Commerce - Kubernetes Orchestration on GKE
 
 ![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)
@@ -389,15 +387,16 @@ kubectl get pvc
 ## 📸 Screenshots
 
 #### 1. Build and push backend
-![Docker Images](./screenshots/Backend Dockerfile.png)
+![Docker Images](./screenshots/backend-dockerfile.png)
 *Successfully Update Docker Images*
 
 #### 1. Build and push frontend
-![Docker Images](./screenshots/Client Dockerfile.png)
+![Docker Images](./screenshots/client-dockerfile.png)
 *Successfully Update Docker Images*
 
 #  Verify images on Docker Hub
 # Visit: https://hub.docker.com/u/jtaraya
+
 
 ### Deployment Process
 
