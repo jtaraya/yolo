@@ -157,6 +157,91 @@ git --version
 
 ---
 
+## 📸 Screenshots
+
+#### 1. Build and push backend
+![Docker Images](./screenshots/backend-dockerfile.png)
+*Successfully Update Docker Images*
+
+#### 1. Build and push frontend
+![Docker Images](./screenshots/client-dockerfile.png)
+*Successfully Update Docker Images*
+
+#  Verify images on Docker Hub
+# Visit: https://hub.docker.com/u/jtaraya
+
+
+### Deployment Process
+
+#### 1. GKE Cluster Creation
+![GKE Cluster](./screenshots/01-gke-cluster-creation.png)
+*Successfully created yolo-cluster with 3 e2-medium nodes in us-central1-a*
+
+#### 2. Kubernetes Manifests Applied
+![kubectl apply](./screenshots/02-kubectl-apply.png)
+*Applying MongoDB StatefulSet, Backend Deployment, and Frontend Deployment*
+
+#### 3. All Pods Running
+![Pods Running](./screenshots/03-pods-running.png)
+*All 5 pods showing 1/1 Ready status*
+```
+NAME                                   READY   STATUS    RESTARTS   AGE
+backend-deployment-5f9b5946f5-hz6qs    1/1     Running   0          17m
+backend-deployment-5f9b5946f5-kn2g6    1/1     Running   0          17m
+frontend-deployment-67965d4479-8ntg4   1/1     Running   0          57s
+frontend-deployment-67965d4479-wpkkc   1/1     Running   0          50s
+mongodb-0                              1/1     Running   0          7h4m
+```
+
+#### 4. Services with External IP
+![Services](./screenshots/04-services-external-ip.png)
+*Frontend service with LoadBalancer type and external IP assigned*
+```
+NAME               TYPE           EXTERNAL-IP    PORT(S)
+frontend-service   LoadBalancer   34.67.157.94   80:30141/TCP
+backend-service    ClusterIP      34.118.238.220 5000/TCP
+mongodb-service    ClusterIP      None           27017/TCP
+```
+
+#### 5. StatefulSet and PVC
+![StatefulSet PVC](./screenshots/05-statefulset-pvc.png)
+*MongoDB StatefulSet with 5Gi PersistentVolumeClaim in Bound status*
+
+---
+
+### Application Screenshots
+
+#### 6. Application Homepage
+![Homepage](./screenshots/06-application-home.png)
+*YOLO e-commerce homepage accessible at http://34.67.157.94*
+
+#### 7. Products and Cart Functionality
+![Add to Cart](./screenshots/07-add-to-cart.png)
+*Successfully adding products to shopping cart*
+
+#### 8. Data Persistence Test
+![Persistence](./screenshots/08-data-persistence-test.png)
+*Cart items persist after MongoDB pod deletion - proving persistent storage works!*
+
+---
+
+### GCP Console
+
+#### 9. GKE Workloads
+![GCP Console](./screenshots/09-gcp-console-workloads.png)
+*GKE workloads visible in Google Cloud Console*
+
+#### 10. Pod Logs
+![Pod Logs](./screenshots/10-pod-logs.png)
+*Backend logs showing successful MongoDB connection*
+```
+Attempting to connect to MongoDB with URI: mongodb://admin:password@mongodb-service:27017/yolomy?authSource=admin
+Server listening on port 5000
+Database connected successfully
+```
+
+---
+
 ## 📥 Installation & Deployment
 
 ### Step 1: Clone the Repository
@@ -384,90 +469,6 @@ kubectl get pvc
 
 ---
 
-## 📸 Screenshots
-
-#### 1. Build and push backend
-![Docker Images](./screenshots/backend-dockerfile.png)
-*Successfully Update Docker Images*
-
-#### 1. Build and push frontend
-![Docker Images](./screenshots/client-dockerfile.png)
-*Successfully Update Docker Images*
-
-#  Verify images on Docker Hub
-# Visit: https://hub.docker.com/u/jtaraya
-
-
-### Deployment Process
-
-#### 1. GKE Cluster Creation
-![GKE Cluster](./screenshots/01-gke-cluster-creation.png)
-*Successfully created yolo-cluster with 3 e2-medium nodes in us-central1-a*
-
-#### 2. Kubernetes Manifests Applied
-![kubectl apply](./screenshots/02-kubectl-apply.png)
-*Applying MongoDB StatefulSet, Backend Deployment, and Frontend Deployment*
-
-#### 3. All Pods Running
-![Pods Running](./screenshots/03-pods-running.png)
-*All 5 pods showing 1/1 Ready status*
-```
-NAME                                   READY   STATUS    RESTARTS   AGE
-backend-deployment-5f9b5946f5-hz6qs    1/1     Running   0          17m
-backend-deployment-5f9b5946f5-kn2g6    1/1     Running   0          17m
-frontend-deployment-67965d4479-8ntg4   1/1     Running   0          57s
-frontend-deployment-67965d4479-wpkkc   1/1     Running   0          50s
-mongodb-0                              1/1     Running   0          7h4m
-```
-
-#### 4. Services with External IP
-![Services](./screenshots/04-services-external-ip.png)
-*Frontend service with LoadBalancer type and external IP assigned*
-```
-NAME               TYPE           EXTERNAL-IP    PORT(S)
-frontend-service   LoadBalancer   34.67.157.94   80:30141/TCP
-backend-service    ClusterIP      34.118.238.220 5000/TCP
-mongodb-service    ClusterIP      None           27017/TCP
-```
-
-#### 5. StatefulSet and PVC
-![StatefulSet PVC](./screenshots/05-statefulset-pvc.png)
-*MongoDB StatefulSet with 5Gi PersistentVolumeClaim in Bound status*
-
----
-
-### Application Screenshots
-
-#### 6. Application Homepage
-![Homepage](./screenshots/06-application-home.png)
-*YOLO e-commerce homepage accessible at http://34.67.157.94*
-
-#### 7. Products and Cart Functionality
-![Add to Cart](./screenshots/07-add-to-cart.png)
-*Successfully adding products to shopping cart*
-
-#### 8. Data Persistence Test
-![Persistence](./screenshots/08-data-persistence-test.png)
-*Cart items persist after MongoDB pod deletion - proving persistent storage works!*
-
----
-
-### GCP Console
-
-#### 9. GKE Workloads
-![GCP Console](./screenshots/09-gcp-console-workloads.png)
-*GKE workloads visible in Google Cloud Console*
-
-#### 10. Pod Logs
-![Pod Logs](./screenshots/10-pod-logs.png)
-*Backend logs showing successful MongoDB connection*
-```
-Attempting to connect to MongoDB with URI: mongodb://admin:password@mongodb-service:27017/yolomy?authSource=admin
-Server listening on port 5000
-Database connected successfully
-```
-
----
 
 ## 🗂️ Project Structure
 ```
